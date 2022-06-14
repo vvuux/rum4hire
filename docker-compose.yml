@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    volumes: 
+      - ./data/db:/var/lib/postgres/data
+    environment:
+      - POSTGRES_NAME=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+  web: 
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./server/:/server/
+    environment:
+      - POSTGRES_NAME=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx/
+    volumes: 
+      - ./nginx/frontend/:/var/www/
+    ports:
+      - 8008:80
+    depends_on:
+      - web
