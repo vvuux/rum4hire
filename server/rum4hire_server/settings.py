@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
+from unittest.mock import DEFAULT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphql_auth',
+    'user'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +129,49 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GRAPHENE = {
+    "SCHEMA": "rum4hire_server.schema.schema",
+    "MIDDLEWARE": [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware'
+    ]
+}
+
+AUTH_USER_MODEL = 'user.HouseOwner'
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_auth.backends.GraphQLAuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+GRAPHQL_JWT = {
+    'JWT_ALLOW_ANY_CLASSES': [
+        'graphql_auth.mutations.Register',
+        'graphql_auth.mutations.VerifyAccount',
+        'graphql_auth.mutations.ResendActivationEmail',
+        'graphql_auth.mutations.SendPasswordResetEmail',
+        'graphql_auth.mutations.PasswordReset',
+        'graphql_auth.mutations.ObtainJSONWebToken',
+        'graphql_auth.mutations.VerifyToken',
+        'graphql_auth.mutations.RefreshToken',
+        'graphql_auth.mutations.RevokeToken',
+        'graphql_auth.mutations.VerifySecondaryEmail',
+    ],
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_COOKIE_NAME': 'JWT'
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+GRAPHQL_AUTH = {
+    'ALLOW_LOGIN_NOT_VERIFIED': False,
+    'ALLOW_LOGIN_WITH_SECONDARY_EMAIL': False,
+    'EXPIRATION_ACTIVATION_TOKEN': timedelta(days=7),
+    'REGISTER_MUTATION_FIELDS': ['email', 'username'],
+}
