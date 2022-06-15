@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
-    'user'
+    'user',
+    'common'
 ]
 
 MIDDLEWARE = [
