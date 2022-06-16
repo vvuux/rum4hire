@@ -168,7 +168,8 @@ GRAPHQL_JWT = {
     'JWT_EXPIRATION_DELTA': timedelta(days=7),
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_COOKIE_NAME': 'JWT'
+    'JWT_COOKIE_NAME': 'JWT',
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
