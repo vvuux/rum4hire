@@ -1,0 +1,157 @@
+body{
+    background-color: rgb(212, 212, 212);
+}
+
+section{
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.container{
+    width: 80%;
+}
+
+h1,h2,h3,h4,h5,p,label {
+    text-decoration: none;
+}
+
+button {
+    padding: 10px 15px; 
+    border-radius: 7px !important;
+    border:none;
+    background-color: rgb(109, 109, 109);
+    color: white;
+}
+
+.to-left{
+    float: left;
+}
+
+
+
+.to-right{
+    float: right;
+}
+
+a {
+    text-decoration: none !important;
+    color: black !important;
+}
+
+#login-section,#signup-section, #change-password-section{
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 10%;
+}
+
+#login-container,#signup-form-container,#change-password-container{
+    padding-top: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+    background-color: rgb(255, 255, 255);
+}
+
+#email-confirm-container{
+    padding-top: 200px;
+}
+
+#login-title, #signup-title, #change-password-title{
+    text-align: center;
+    font-size: 60px;
+}
+
+.button-area{
+    margin-top:30px;
+    margin-bottom: 30px;
+}
+
+#signup-btn-area{
+    text-align: center;
+}
+
+#signup-btn{
+    position:relative;
+}
+#email-confirm-text-wrapper{
+    margin-top: 30px;
+}
+
+#search-container, #house-list-container,#pagination-container{
+    padding:30px 50px;
+}
+
+#search-container{
+    border:1px solid black;
+}
+
+#search-bar-wrapper{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#search-bar{
+    width: 60%;
+    margin-left: 20%;
+    margin-right:20%;
+}
+
+.list{
+    padding: 20px;
+}
+
+.part{
+    padding: 20px;
+    margin-top:20px;
+    margin-bottom:20px;
+    border: 2px solid black;
+    height: 250px;
+}
+
+.house-status{
+    font-size: large;
+}
+
+.field-info{
+    display: inline-block;
+    padding-left: 20px;
+    padding-right:20px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.housename{
+    display: block;
+    padding-left: 20px;
+    padding-right:20px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.house-info-wrapper,.house-title-wrapper{
+    display: inline;
+}
+
+.house-image-wrapper{
+    height: 200px;
+}
+
+img{
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    cursor: pointer;
+}
+
+#signup-error-title{
+    color:red
+}
+
+.error-message{
+    color: red;
+    margin-bottom: 0px;
+}
+
+#signup-errors{
+    padding:10px;
+}
