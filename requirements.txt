@@ -21,3 +21,5 @@ django-cors-headers==3.11.0
 requests==2.22.0
 pillow==9.1.0
 django-environ==0.8.1
+boto3>=1.15
+django-storages>=1.1
