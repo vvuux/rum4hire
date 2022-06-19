@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 import os
 import environ
+from datetime import datetime
 
 # set up environment variables
 env = environ.Env()
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'graphql_auth',
     'user',
     'common',
+    'house'
 ]
 
 MIDDLEWARE = [
@@ -183,6 +185,71 @@ GRAPHQL_AUTH = {
     'REGISTER_MUTATION_FIELDS': ['email', 'username'],
 }
 
+MEDIA_URL = "media/"
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] [{levelname}] [{pathname} {funcName}()] {message}',
+            'style': '{',
+            'datefmt': '%d-%m-%Y %H:%M:%S '
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers':{
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': f'rum4hire_server/log/{datetime.now().strftime("%a_%d_%b_%Y")}.log',
+            'formatter': 'verbose',
+        },
+        'file_query': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'filename': f'rum4hire_server/log/db/{datetime.now().strftime("%a_%d_%b_%Y")}.log',    
+        },
+        
+        'mail_admins': {
+            'class': 'django.utils.log.AdminEmailHandler',
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'email_backend': 'django.core.mail.backends.filebased.EmailBackend'
+        }
+    },
+    'loggers': {
+        'django.db.backends':{
+            'level':'DEBUG',
+            'handlers': ['file_query'],
+        },
+        'root':{
+            'level': 'INFO',
+            'handlers':['file','mail_admins'],
+            'formatter': ['verbose'],
+            'propagate': True
+        },
+    },
+}
+
 
 # aws
 
@@ -191,3 +258,4 @@ AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_S3_FILE_OVERWRITE = env('AWS_S3_FILE_OVERWRITE')
