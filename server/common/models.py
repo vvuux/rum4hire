@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.utils import timezone
 
 # Create your models here.
 class Common(models.Model):
@@ -8,6 +9,47 @@ class Common(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
+    def soft_delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
+
     class Meta:
         abstract = True
         ordering = ['-created_at']
+
+
+class City(models.Model):
+    id = models.PositiveIntegerField(unique=True, primary_key=True)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name_plural = "Cities"
+
+
+class District(models.Model):
+    id = models.PositiveIntegerField(unique=True, primary_key=True)
+    name = models.CharField(max_length=255)
+    city = models.ForeignKey(
+        City,
+        related_name="districts",
+        on_delete=models.CASCADE
+    )
+
+
+class Ward(models.Model):
+    id = models.PositiveIntegerField(unique=True, primary_key=True)
+    name = models.CharField(max_length=255)
+    prefix = models.CharField(max_length=20)
+    district = models.ForeignKey(
+        District,
+        related_name="wards",
+        on_delete=models.CASCADE        
+    )
+
+
+class Image(Common):
+    main_image = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
