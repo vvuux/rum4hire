@@ -26,6 +26,10 @@ class City(models.Model):
     class Meta:
         verbose_name_plural = "Cities"
 
+    
+    def __str__(self):
+        return self.name
+
 
 class District(models.Model):
     id = models.PositiveIntegerField(unique=True, primary_key=True)
@@ -35,6 +39,9 @@ class District(models.Model):
         related_name="districts",
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Ward(models.Model):
@@ -46,6 +53,9 @@ class Ward(models.Model):
         related_name="wards",
         on_delete=models.CASCADE        
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Image(Common):
