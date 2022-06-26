@@ -6,8 +6,8 @@ from common.schema.types import CityType, DistrictType, WardType
 
 class Query(graphene.ObjectType):
     get_all_cities = graphene.List(CityType)
-    get_districts_in_city = graphene.List(DistrictType, city_id=graphene.String())
-    get_wards_in_district = graphene.List(WardType, district_id=graphene.String())
+    get_districts_in_city = graphene.List(DistrictType, city_id=graphene.Int())
+    get_wards_in_district = graphene.List(WardType, district_id=graphene.Int())
     
     def resolve_get_all_cities(root, info, *args, **kwargs):
         return City.objects.all()
