@@ -26,7 +26,7 @@ $(document).ready(function(){
                         document.cookie = `${CONST.accessTokenKeyString}=${accessToken}`;
                         document.cookie = `${CONST.refreshTokenKeyString}=${refreshToken}`;
                         if (nextPath === null){
-                            window.location.replace(`${CONST.domain}/home.html`);
+                            window.location.replace(`${CONST.domain}/house-list-view.html`);
                         }
                         else{
                             window.location.replace(`${CONST.domain}${nextPath}`);
@@ -44,7 +44,6 @@ $(document).ready(function(){
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown){
-                    console.log("here");
                     window.location.href = `${CONST.domain}/500.html`;
                 }
             })
