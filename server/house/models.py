@@ -37,9 +37,9 @@ class HouseImage(Image):
 class House(Common):
 
     class RequestStatus(models.TextChoices):
-        ACCEPT = 1, _("Accept")
-        REJECT = 2, _("Reject")
-        PENDING = 3, _("Pending")
+        ACCEPT = "Accept", _("Accept")
+        REJECT = "Reject", _("Reject")
+        PENDING = "Pending", _("Pending")
 
     owner = models.ForeignKey(
         HouseOwner,
