@@ -1,8 +1,13 @@
 import graphene
+
 from user import schema as user_schema
+from common import schema as common_schema
+from house import schema as house_schema
 
 class Query(
-    user_schema.Query, 
+    user_schema.Query,
+    common_schema.Query,
+    house_schema.Query,
     graphene.ObjectType
 ):
     pass
