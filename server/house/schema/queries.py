@@ -6,13 +6,13 @@ from house.models import House
 
 
 class Query(graphene.ObjectType):
-    get_my_house = graphene.List(HouseType)
+    get_my_houses = graphene.List(HouseType)
     get_house_details = graphene.Field(HouseType, id=graphene.String())
-    get_houses_by_name = graphene.List(HouseType, name=graphene.String())
+    search_my_houses_by_name = graphene.List(HouseType, name=graphene.String())
 
 
     @login_required
-    def resolve_get_my_house(root, info, *args, **kwargs):
+    def resolve_get_my_houses(root, info, *args, **kwargs):
         return House.objects.filter(owner=info.context.user)\
             .prefetch_related("city")\
                 .prefetch_related("district")\
@@ -26,7 +26,7 @@ class Query(graphene.ObjectType):
             return House.objects.none()
 
     @login_required
-    def resolve_get_houses_by_name(root, info, name, *args, **kwargs):    
+    def resolve_search_my_houses_by_name(root, info, name, *args, **kwargs):    
         return House.objects.filter(
             owner=info.context.user, 
             name__icontains=name
