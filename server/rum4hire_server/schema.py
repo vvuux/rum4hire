@@ -14,6 +14,7 @@ class Query(
 
 class Mutation(
     user_schema.Mutation, 
+    house_schema.Mutation,
     graphene.ObjectType
 ):
     pass
