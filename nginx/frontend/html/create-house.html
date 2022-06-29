@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/css.css" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Create House</title>
+</head>
+<body>
+    <div class="container">
+        <section class="navbar-section">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Rum4hire</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/house-list-view.html">Your houses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="log-out-button" href="#">Log out</a>
+                            </li>
+                        </ul> 
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+        <section id="create-house-section">
+            <div id="create-house-form-container">
+                <div id="create-house-title-wrapper">
+                    <h1 id="create-house-title">Create House</h1>
+                </div>
+                <div id="error-wrapper">
+                    <p class="error" id="create-house-error-title" hidden>Error: </p>
+                    <div id="create-house-errors" hidden>
+                    </div>
+                    <div id="upload-house-image-errors" hidden>
+                    </div>
+                </div>
+                <div id="create-house-form-wrapper">
+                    <form action="POST">
+                        <div class="mb-3 mt-2">
+                            <label for="housename-input">Name:</label>
+                            <input class="form-control" type="text" id="housename-input" placeholder="House Name" required>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="city-select">City:</label>
+                            <select class="form-control" id="city-select" required>
+                                <option value="-1" selected>None</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="district-select">District:</label>
+                            <select class="form-control" id="district-select" disabled required>
+                                <option value="-1" selected>None</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="ward-select">Ward:</label>
+                            <select class="form-control" id="ward-select" disabled required>
+                                <option value="-1" selected>None</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="address-input">Address:</label>
+                            <input class="form-control" type="text" id="address-input" placeholder="Address" required>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="number-of-floor-input">Number of Floor:</label>
+                            <input type="number" class="form-control" id="number-of-floor-input" min="1" value="1" required>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="area-input">Area:</label>
+                            <input type="number" class="form-control" id="area-input" min="1" value="1" required>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="main-image-input" class="form-label">Main Image: </label>
+                            <input class="form-control" type="file" id="main-image-input" accept="image/jpeg,image/png">
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="images-input" class="form-label">Detail Images</label>
+                            <input class="form-control" type="file" id="images-input" accept="image/jpeg,image/png" multiple>
+                        </div>
+
+                        <div class="mb-3 mt-2">
+                            <label for="description-textarea">Description: </label>
+                            <textarea class="form-control" maxlength="1023" id="description-textarea" cols="30" rows="10" placeholder="More Infomation about your house"></textarea>
+                        </div>
+
+
+                        <div class="button-area" id="create-house-btn-area">
+                            <button type="button" id="create-house-btn">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+<script src="../js/auth.js" type="module"></script>
+<script src="../js/createHouse.js" type="module"></script>
+</html>

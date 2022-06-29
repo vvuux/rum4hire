@@ -1,14 +1,14 @@
 from graphql_jwt.decorators import login_required
 
-from .input_mutatation import HouseInput
+from .input_mutatation import CreateHouseInput
 from common.schema.output_mutation import OutPut
 from house.models import House
-from house.forms.house_form import HouseForm
+from house.forms.create_house_form import CreateHouseForm
 
 
 class CreateHouseMutation(OutPut):
     class Arguments:
-        data = HouseInput(required=True)
+        data = CreateHouseInput(required=True)
 
     @login_required
     def mutate(root, info, *args, **kwargs):
@@ -17,7 +17,7 @@ class CreateHouseMutation(OutPut):
             success=False
             data=None
 
-            create_house_form = HouseForm(data=kwargs["data"])
+            create_house_form = CreateHouseForm(data=kwargs["data"])
 
             if create_house_form.is_valid():
                 create_house_form.cleaned_data["owner"] = user

@@ -7,7 +7,7 @@ from django import forms
 from house.models import House
 
 
-class HouseForm(ModelForm):
+class CreateHouseForm(ModelForm):
     # min and max value depend on city, district, ward id
     city_id = forms.IntegerField(min_value=1, max_value=63) 
     district_id = forms.IntegerField(min_value=1, max_value=709)
