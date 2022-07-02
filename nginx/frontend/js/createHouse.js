@@ -1,5 +1,5 @@
 import {domain, accessTokenKeyString} from "./const.js";
-import {getCookies} from "./function.js";
+import {getCookies, toErrorPage} from "./function.js";
 
 
 $(document).ready(function(){
@@ -92,9 +92,55 @@ $(document).ready(function(){
             }
         })
     }
+
+    function uploadFile(uuid, formData){
+        formData.append("uuid",uuid);
+        $.ajax({
+            method: "POST",
+            url: `${domain}/house/upload-images/`,
+            processData: false,
+            contentType: false,
+            data: formData,
+            headers: {
+                "X-CSRFToken": getCookies("csrftoken"),
+                "Authorization": `JWT ${accessToken}`
+            },
+            success: function(result){
+                if (result.success === true){
+                    console.log("Success");
+                    window.location.replace(`${domain}/house-list-view.html`);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                if(jqXHR.status === 400){
+                    let errors = jqXHR.responseJSON.errors;
+                
+                    if ($("#upload-room-image-errors").length !== 0){
+                        $("#upload-room-image-errors").empty();        
+                    }
+                    
+                    for (var key in errors){
+                        $("#upload-room-image-errors").append(`<p class="error-message"> - ${key}: ${errors[key][0]}</p>`);
+                    }
+                    $("#upload-room-image-errors").attr("hidden",false);
+                    $("#upload-room-image-error-title").attr("hidden",false);
+                    if (mainImage === undefined){
+                        $("#create-house-errors").append(`<p class="error-message"> - Main Image: This field is required </p>`);   
+                    }
+                    if (images.length === 0){
+                        $("#create-house-errors").append(`<p class="error-message"> - Detail Images: This field is required </p>`);
+                    }
+                }
+                else{
+                    toErrorPage(jqXHR.status);
+                }
+            }
+        })
+    }
     
     function createHouse(){
         $(document).ready(function(){
+            
             $("button#create-house-btn").click(function(){
                 var name = $("#housename-input").val();
                 var cityId = $("#city-select").val();
@@ -107,59 +153,58 @@ $(document).ready(function(){
                 var mainImage = $("#main-image-input").get(0).files[0];
                 var images = $("#images-input").prop("files");
 
-                // var formData = new FormData();
-                // formData.append("main_image",mainImage);
+                var formData = new FormData();
+                formData.append("main_image",mainImage);
 
-                // for (let i = 0; i < images.length; i++){
-                //     formData.append('images',images[i]);
-                // }
+                for (let i = 0; i < images.length; i++){
+                    formData.append('detail_images',images[i]);
+                }
 
-
-                // var imageObjects = {};                
-                // for (let i = 0; i < images.length; i++){
-                //     imageObjects[images[i].name] = imageToBase64String(images[i]);
-                // }
-
-                // var UploadedImages = JSON.stringify({
-                //     images: imageObjects
-                // })
-                // console.log(UploadedMainImage);
-                // console.log(UploadedImages);
-                // console.log(typeof(UploadedImages));
-
-                // $.ajax({
-                //     url: `${domain}/graphql/`,
-                //     dataType: "json",
-                //     type:"POST",
-                //     contentType: "multipart/form-data",
-                //     data: JSON.stringify({
-                //         query: `mutation {createHouse(data:{name:"${name}", cityId:${cityId}, districtId:${districtId}, wardId:${wardId}, address: "${address}", area: ${area}, numberOfFloor: ${numberOfFloor}, description: "${description}", mainImage: $mainImage, images: $images}){success	errors  data}}`,
-                //     }),
-                //     headers: {
-                //         "Authorization": `JWT ${accessToken}`,
-                //     },
-                //     success: function(result){
-                //         var errors = JSON.parse(result.data.createHouse.errors);
-                //         if (result.data.createHouse.success === true){
-                //             uploadFile(result.data.createHouse.houseId, formData, accessToken);
-                //         }
-                //         else {
-                //             uploadFile(-1, formData, accessToken);
-                //             if ($("#create-house-errors").length !== 0){
-                //                 $("#create-house-errors").empty();        
-                //             }
+                $.ajax({
+                    url: `${domain}/graphql/`,
+                    dataType: "json",
+                    type:"POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        query: `mutation {createHouse(data:{name:"${name}", cityId:${cityId}, districtId:${districtId}, wardId:${wardId}, address: "${address}", area: ${area}, numberOfFloor: ${numberOfFloor}, description: "${description}"}){success	errors  data}}`,
+                    }),
+                    headers: {
+                        "Authorization": `JWT ${accessToken}`,
+                    },
+                    success: function(result){
+                        var errors = JSON.parse(result.data.createHouse.errors);
+                        if (result.data.createHouse.success === true){
+                            const uuid = JSON.parse(result.data.createHouse.data)                         
+                            uploadFile(uuid.uuid, formData);
+                        }
+                        else {
                             
-                //             for (var key in errors){
-                //                 $("#create-house-errors").append(`<p class="error-message"> - ${key}: ${errors[key][0]}</p>`);
-                //             }
-                //             $("#create-house-errors").attr("hidden",false);
-                //             $("#create-house-error-title").attr("hidden",false);
-                //         }
-                //     },
-                // })
+                            if ($("#create-house-errors").length !== 0){
+                                $("#create-house-errors").empty();        
+                            }
+                            for (var key in errors){
+                                $("#create-house-errors").append(`<p class="error-message"> - ${key}: ${errors[key][0]}</p>`);
+                            }
+                            $("#create-house-errors").attr("hidden",false);
+                            $("#create-house-error-title").attr("hidden",false);
+                            if (mainImage === undefined){
+                                $("#create-house-errors").append(`<p class="error-message"> - Main Image: This field is required </p>`);   
+                            }
+                            if (images.length === 0){
+                                $("#create-house-errors").append(`<p class="error-message"> - Detail Images: This field is required </p>`);
+                            }
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        toErrorPage(jqXHR.status)
+                    }
+                })
             })            
         })
     }
+
+    
+
 
 
 

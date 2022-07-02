@@ -58,8 +58,16 @@ class Ward(models.Model):
         return self.name
 
 
-class Image(Common):
+class Image(models.Model):
     main_image = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    def soft_delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     class Meta:
         abstract = True
+        ordering = ['-created_at']

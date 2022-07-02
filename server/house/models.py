@@ -2,9 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
-from django.db.transaction import atomic
 from django.db.models.signals import post_save
 from django.conf import settings
+import logging
 
 from common.models import (
     Common,
@@ -19,9 +19,10 @@ from common.serializers import ImageEncoder
 
 # Create your models here.
 
+logger = logging.getLogger(__name__)
 
 def house_image_upload_dir(instance, filename):
-    return f"{settings.MEDIA_URL}house/{instance.uuid}_{timezone.now()}_{filename}"
+    return f"{settings.MEDIA_URL}house/{instance.id}_{timezone.now()}_{filename}"
 
 
 class HouseImage(Image):
@@ -36,6 +37,7 @@ class HouseImage(Image):
     )
 
     def save(self, *args, **kwargs):
+        logger.info("Save")
         if self.main_image and self.deleted_at == None:
             # soft delete manually because of execution of save() method happening twice  
             try:
@@ -56,7 +58,7 @@ class HouseImage(Image):
                     .order_by('created_at') 
             if len(current_details_image) + 1 > settings.MAXIMUM_IMAGE_ACTIVE:
                 current_details_image[0:1].update(deleted_at=timezone.now())
-        
+        print("done")
         super().save(*args, **kwargs)
 
     class Meta:
@@ -72,7 +74,7 @@ class HouseImage(Image):
             main_str = "Main"
         else:
             main_str = "Details"
-        return f"{self.uuid} - {self.house.name} - {act_str} - {main_str}"
+        return f"{self.id} - {self.house.name} - {act_str} - {main_str}"
 
 class House(Common):
 
@@ -125,6 +127,21 @@ class House(Common):
         encoder=ImageEncoder
     )
 
+
+    @staticmethod
+    def update_images(house, main_image:bool):
+        try: 
+            if main_image:
+                main_image = HouseImage.objects.filter(house=house, main_image=True, deleted_at=None)
+                house.main_image = list(main_image.values("id", "image", "main_image", "created_at"))
+                house.save()
+            else:
+                detail_images = HouseImage.objects.filter(house=house, main_image=False, deleted_at=None)
+                house.detail_images = list(detail_images.values("id", "image", "main_image", "created_at"))
+                house.save()
+        except Exception as e:
+            pass
+
     def save(self, *args, **kwargs):
         self.full_address = f"{self.address}, {self.ward}, {self.district}, {self.city}"
 
@@ -133,11 +150,10 @@ class House(Common):
 
 def house_image_post_save(sender, instance, *args, **kwargs):
     try:
-        print("post_save")
         obj_house = instance.house
         if instance.main_image and instance.deleted_at == None:
             obj_house.main_image = [{
-                'uuid': instance.uuid,
+                'id': instance.id,
                 'image': instance.image.url,
                 'main_image': instance.main_image,
                 'created_at': instance.created_at,
@@ -147,7 +163,7 @@ def house_image_post_save(sender, instance, *args, **kwargs):
             if len(obj_house.detail_images) + 1 > settings.MAXIMUM_IMAGE_ACTIVE:
                 obj_house.detail_images.pop(0)
             obj_house.detail_images.append({
-                'uuid': instance.uuid,
+                'id': instance.id,
                 'image': instance.image.url,
                 'main_image': instance.main_image,
                 'created_at': instance.created_at,

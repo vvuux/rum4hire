@@ -29,7 +29,6 @@ class CreateHouseForm(ModelForm):
         return self.data["name"]
 
     def clean_address(self):
-        print("Address:", self.data["address"])
         if self.data["address"].strip() == "":
             raise ValidationError("Address is required")
         return self.data["address"]

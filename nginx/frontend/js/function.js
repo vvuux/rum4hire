@@ -25,8 +25,13 @@ export function deleteCookie(cookieName){
     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
+export function toErrorPage(errorStatus){
+    window.location.href = `${errorStatus}.html`;
+}
+
 export default {
     getParam, 
     getCookies, 
-    deleteCookie
+    deleteCookie,
+    toErrorPage,
 }
